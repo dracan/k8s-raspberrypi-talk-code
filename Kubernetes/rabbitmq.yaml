@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rabbitmq
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        ref: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: arm32v7/rabbitmq:3.6-management
+        ports:
+        - containerPort: 5672
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5672
+  selector:
+    ref: rabbitmq
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-manage
+spec:
+  type: NodePort
+  ports:
+  - port: 15672
+    nodePort: 30001
+  selector:
+    ref: rabbitmq

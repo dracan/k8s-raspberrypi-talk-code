@@ -1,0 +1,25 @@
+version: '3'
+services:
+  web:
+    build:
+      context: web/
+    image: dracan/dddweb:1.0
+    ports:
+      - 1234:80
+    restart: always
+    depends_on:
+      - "rabbitmq"
+
+  worker:
+    build:
+      context: worker/
+    image: dracan/dddworker:1.0
+    restart: always
+    depends_on:
+      - "rabbitmq"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 8080:15672
+      - 5672:5672
